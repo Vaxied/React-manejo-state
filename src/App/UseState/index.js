@@ -9,7 +9,12 @@ function UseState({ name }) {
                 <p>Por favor, escribe el codigo de seguridad.</p>
                 {error && <p>Error: el codigo es incorrecto</p>}
                 <input placeholder="Codigo de seguridad"></input>
-                <button onClick={() => setError(!error)}>Confirmar</button>
+                <button
+                    onClick={() => setError(!error)}
+                    // or setError(prevState => !prevState)
+                >
+                    Confirmar
+                </button>
             </div>
         </div>
     )
