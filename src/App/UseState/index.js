@@ -4,43 +4,64 @@ import Loading from '../Loading/index'
 const SECURITY_CODE = 'paradigma'
 
 function UseState({ name }) {
+    const [state, setState] = React.useState({
+        error: false,
+        loading: false,
+        value: '',
+    })
     const [error, setError] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
     const [value, setValue] = React.useState('')
 
-    console.log(value)
+    console.log(state.value)
     React.useEffect(() => {
         console.log('iniciando efecto')
         // Simulating backend call
-        if (!!loading) {
+        if (!!state.loading) {
             console.log('iniciando verificacion')
             setTimeout(() => {
-                setLoading(false)
-                if (SECURITY_CODE != value) {
-                    setError(true)
+                if (SECURITY_CODE != state.value) {
+                    setState({
+                        ...state,
+                        error: true,
+                        loading: false,
+                    })
+                } else {
+                    setState({
+                        ...state,
+                        error: false,
+                        loading: false,
+                    })
                 }
             }, 3000)
             console.log('finalizando verificacion')
         }
         console.log('terminando efecto')
-    }, [loading])
+    }, [state.loading])
     return (
         <div className="UseState-wrapper">
             <div className="UseState">
                 <h2>Eliminar UseState</h2>
                 <p>Por favor, escribe el codigo de seguridad.</p>
-                {!!error && <p>Error: el codigo es incorrecto</p>}
-                {!!loading && <Loading />}
+                {!!state.error && <p>Error: el codigo es incorrecto</p>}
+                {!!state.loading && <Loading />}
                 <input
                     placeholder="Codigo de seguridad"
-                    value={value}
-                    onChange={() => setValue(event.target.value)}
+                    value={state.value}
+                    onChange={() =>
+                        setState({
+                            ...state,
+                            value: event.target.value,
+                        })
+                    }
                 ></input>
                 <button
                     onClick={() => {
-                        setLoading(true)
-                        if (error) setError(false)
-                        // or setError(prevState => !prevState)
+                        setState({
+                            ...state,
+                            error: false,
+                            loading: true,
+                        })
                     }}
                 >
                     Confirmar
