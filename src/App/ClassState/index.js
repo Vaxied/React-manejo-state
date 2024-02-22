@@ -1,26 +1,31 @@
 import React from 'react'
 import Loading from '../Loading/index'
 
+const SECURITY_CODE = 'paradigma'
+
 class ClassState extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             error: false,
             loading: false,
+            value: '',
         }
     }
 
     componentDidUpdate() {
-        console.log('iniciando efecto')
+        console.log(this.state.value)
         // Simulating backend call
         if (!!this.state.loading) {
             console.log('iniciando verificacion')
+
             setTimeout(() => {
-                this.setState({ loading: false })
+                if (SECURITY_CODE != this.state.value) {
+                    this.setState({ error: true, loading: false })
+                } else this.setState({ error: false, loading: false })
             }, 3000)
             console.log('finalizando verificacion')
         }
-        console.log('terminando efecto')
     }
     render() {
         return (
@@ -32,10 +37,16 @@ class ClassState extends React.Component {
                         <p>Error: el codigo es incorrecto</p>
                     )}
                     {!!this.state.loading && <Loading />}
-                    <input placeholder="Codigo de seguridad"></input>
+                    <input
+                        placeholder="Codigo de seguridad"
+                        value={this.state.value}
+                        onChange={() =>
+                            this.setState({ value: event.target.value })
+                        }
+                    />
                     <button
                         onClick={
-                            () => this.setState({ loading: true })
+                            () => this.setState({ loading: true, error: false })
                             // or using prevState and implicit return
                             // this.setState(prevState => ({error: !prevState.error}))
                         }
