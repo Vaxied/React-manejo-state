@@ -1,4 +1,5 @@
 import React from 'react'
+import Loading from '../Loading/index'
 
 function UseState({ name }) {
     const [error, setError] = React.useState(false)
@@ -6,6 +7,7 @@ function UseState({ name }) {
 
     React.useEffect(() => {
         console.log('iniciando efecto')
+        // Simulating backend call
         if (!!loading) {
             console.log('iniciando verificacion')
             setTimeout(() => {
@@ -20,8 +22,8 @@ function UseState({ name }) {
             <div className="UseState">
                 <h2>Eliminar UseState</h2>
                 <p>Por favor, escribe el codigo de seguridad.</p>
-                {error && <p>Error: el codigo es incorrecto</p>}
-                {loading && <p>Cargando...</p>}
+                {!!error && <p>Error: el codigo es incorrecto</p>}
+                {!!loading && <Loading />}
                 <input placeholder="Codigo de seguridad"></input>
                 <button
                     onClick={() => setLoading(true)}
