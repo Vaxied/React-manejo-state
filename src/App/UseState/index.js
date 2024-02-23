@@ -81,7 +81,6 @@ function UseState({ name }) {
         console.log('terminando efecto')
     }, [state.loading])
 
-    console.log(state)
     if (!!state.confirmed && !state.deleted) {
         return (
             <div className="UseState-wrapper">
