@@ -15,7 +15,8 @@ body {
 }
 
 .UseState-wrapper,
-.ClassState-wrapper {
+.ClassState-wrapper,
+.UseReducer-wrapper {
     height: calc(50% - 0.05rem);
     display: flex;
     justify-content: center;
@@ -23,7 +24,8 @@ body {
 }
 
 .UseState,
-.ClassState {
+.ClassState,
+.UseReducer {
     text-align: center;
 }
 

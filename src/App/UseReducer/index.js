@@ -11,6 +11,15 @@ function UseReducer({ name }) {
         deleted: false,
     }
 
+    const onError = () => dispatch({ type: actionTypes.error })
+    const onCheck = () => dispatch({ type: actionTypes.check })
+    const onConfirm = () => dispatch({ type: actionTypes.confirmed })
+    const onDelete = () => dispatch({ type: actionTypes.deleted })
+    const onReset = () => dispatch({ type: actionTypes.reset })
+
+    const onWrite = (event) => {
+        dispatch({ type: actionTypes.write, payload: event.target.value })
+    }
     // A reducer receives two parameters. A state, and an action.
     // This action can be discrete or dynamic.
 
@@ -61,35 +70,43 @@ function UseReducer({ name }) {
     //     }
     // }
 
+    const actionTypes = {
+        error: 'ERROR',
+        confirmed: 'CONFIRMED',
+        check: 'CHECK',
+        deleted: 'DELETED',
+        reset: 'RESET',
+        write: 'WRITE',
+    }
     const reducerObject = (state, payload) => ({
-        ERROR: {
+        [actionTypes.error]: {
             ...state,
             error: true,
             loading: false,
             value: '',
         },
-        CONFIRMED: {
+        [actionTypes.confirmed]: {
             ...state,
             error: false,
             loading: false,
             confirmed: true,
         },
-        CHECK: {
+        [actionTypes.check]: {
             ...state,
             loading: true,
             error: false,
         },
-        DELETED: {
+        [actionTypes.deleted]: {
             ...state,
             deleted: true,
         },
-        RESET: {
+        [actionTypes.reset]: {
             ...state,
             confirmed: false,
             deleted: false,
             value: '',
         },
-        WRITE: {
+        [actionTypes.write]: {
             ...state,
             value: payload,
         },
@@ -116,9 +133,9 @@ function UseReducer({ name }) {
             console.log('iniciando verificacion')
             setTimeout(() => {
                 if (SECURITY_CODE != state.value) {
-                    dispatch({ type: 'ERROR' })
+                    onError()
                 } else {
-                    dispatch({ type: 'CONFIRMED' })
+                    onConfirm()
                 }
             }, 3000)
             console.log('finalizando verificacion')
@@ -128,15 +145,11 @@ function UseReducer({ name }) {
 
     if (!!state.confirmed && !state.deleted) {
         return (
-            <div className="UseState-wrapper">
-                <div className="UseState">
+            <div className="UseReducer-wrapper">
+                <div className="UseReducer">
                     <p>Estas seguro que deseas eliminar?</p>
-                    <button onClick={() => dispatch({ type: 'DELETED' })}>
-                        Si, lo estoy
-                    </button>
-                    <button onClick={() => dispatch({ type: 'RESET' })}>
-                        No, volver atras
-                    </button>
+                    <button onClick={onDelete}>Si, lo estoy</button>
+                    <button onClick={onReset}>No, volver atras</button>
                 </div>
             </div>
         )
@@ -144,10 +157,10 @@ function UseReducer({ name }) {
         console.log('deleting')
         return (
             <>
-                <div className="UseState-wrapper">
-                    <div className="UseState">
+                <div className="UseReducer-wrapper">
+                    <div className="UseReducer">
                         <p>Eliminado con exito!</p>
-                        <button onClick={() => dispatch({ type: 'RESET' })}>
+                        <button onClick={onReset}>
                             Volver al estado inicial
                         </button>
                     </div>
@@ -156,25 +169,19 @@ function UseReducer({ name }) {
         )
     } else {
         return (
-            <div className="UseState-wrapper">
-                <div className="UseState">
-                    <h2>Eliminar UseState</h2>
+            <div className="UseReducer-wrapper">
+                <div className="UseReducer">
+                    <h2>Eliminar UseReducer</h2>
                     <p>Por favor, escribe el codigo de seguridad.</p>
                     {!!state.error && <p>Error: el codigo es incorrecto</p>}
                     {!!state.loading && <Loading />}
                     <input
                         placeholder="Codigo de seguridad"
                         value={state.value}
-                        onChange={(event) =>
-                            dispatch({
-                                type: 'WRITE',
-                                payload: event.target.value,
-                            })
-                        }
+                        onChange={onWrite}
+                        disabled={state.loading}
                     ></input>
-                    <button onClick={() => dispatch({ type: 'CHECK' })}>
-                        Confirmar
-                    </button>
+                    <button onClick={onCheck}>Confirmar</button>
                 </div>
             </div>
         )
